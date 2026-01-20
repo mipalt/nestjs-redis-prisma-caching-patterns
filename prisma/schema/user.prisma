@@ -1,0 +1,20 @@
+model User {
+  id    String  @id @default(uuid())
+  email String  @unique
+  name  String?
+  posts Post[]
+
+  @@map("users")
+}
+
+model Post {
+  id      String @id @default(uuid())
+  title   String
+  content String
+
+  author   User?   @relation(fields: [authorId], references: [id])
+  authorId String?
+
+  @@index([authorId])
+  @@map("posts")
+}

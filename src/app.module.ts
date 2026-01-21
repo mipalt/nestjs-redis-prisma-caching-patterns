@@ -8,6 +8,8 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor.
 import { HttpExceptionFilter } from './common/filters/http-exeption.filter.js';
 import { UserModule } from './module/user/user.module.js';
 import { PostModule } from './module/post/post.module.js';
+import { HttpLoggingInterceptor } from './common/interceptors/http-logging.interceptor.js';
+import { LoggerModule } from './logger/logger.module.js';
 
 @Module({
   providers: [
@@ -18,6 +20,10 @@ import { PostModule } from './module/post/post.module.js';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpLoggingInterceptor,
     },
     {
       provide: APP_PIPE,
@@ -39,6 +45,7 @@ import { PostModule } from './module/post/post.module.js';
     }),
     UserModule,
     PostModule,
+    LoggerModule,
   ],
 })
 export class AppModule {}

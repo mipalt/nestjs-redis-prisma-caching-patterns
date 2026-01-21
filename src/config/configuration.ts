@@ -6,6 +6,8 @@ export default () => {
   return {
     app: {
       port: env.PORT,
+      nodeEnv: env.NODE_ENV,
+      logLevel: env.LOG_LEVEL,
     },
     db: {
       url: env.DATABASE_URL,

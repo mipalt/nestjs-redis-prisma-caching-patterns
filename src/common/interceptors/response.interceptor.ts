@@ -4,11 +4,11 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+import { map, Observable } from 'rxjs';
 import {
   ApiResponse,
   ServiceResponse,
-} from 'src/shared/types/response.interface.js';
-import { map, Observable } from 'rxjs';
+} from '../../shared/types/response.interface.js';
 
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<

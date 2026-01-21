@@ -1,10 +1,12 @@
 import { PrismaUtil } from '../../src/common/utils/prisma.util.js';
+import { postSeeder } from './post.seeder.js';
 import { userSeeder } from './user.seeder.js';
 
 const prisma = PrismaUtil.prismaClient();
 
 async function main() {
   await userSeeder(prisma);
+  await postSeeder(prisma)
 }
 
 main()

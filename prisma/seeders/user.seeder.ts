@@ -13,13 +13,13 @@ export async function userSeeder(prisma: PrismaClient) {
     await prisma.user.createMany({
       data: [
         {
-          name: 'Admin',
-          email: 'admin@example.com',
+          name: 'Muhammad Patrick',
+          email: 'm.pepet@example.com',
           password: hashedPassword,
         },
         {
-          name: 'User',
-          email: 'user@example.com',
+          name: 'Asep',
+          email: 'asep@example.com',
           password: hashedPassword,
         },
       ],

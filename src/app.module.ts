@@ -7,6 +7,7 @@ import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor.js';
 import { HttpExceptionFilter } from './common/filters/http-exeption.filter.js';
 import { UserModule } from './module/user/user.module.js';
+import { PostModule } from './module/post/post.module.js';
 
 @Module({
   providers: [
@@ -37,6 +38,7 @@ import { UserModule } from './module/user/user.module.js';
       load: [configuration],
     }),
     UserModule,
+    PostModule,
   ],
 })
 export class AppModule {}

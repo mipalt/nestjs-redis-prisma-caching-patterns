@@ -151,7 +151,7 @@ export type PostGroupByOutputType = {
   id: string;
   title: string;
   content: string;
-  authorId: string | null;
+  authorId: string;
   _count: PostCountAggregateOutputType | null;
   _min: PostMinAggregateOutputType | null;
   _max: PostMaxAggregateOutputType | null;
@@ -176,18 +176,15 @@ export type PostWhereInput = {
   id?: Prisma.StringFilter<'Post'> | string;
   title?: Prisma.StringFilter<'Post'> | string;
   content?: Prisma.StringFilter<'Post'> | string;
-  authorId?: Prisma.StringNullableFilter<'Post'> | string | null;
-  author?: Prisma.XOR<
-    Prisma.UserNullableScalarRelationFilter,
-    Prisma.UserWhereInput
-  > | null;
+  authorId?: Prisma.StringFilter<'Post'> | string;
+  author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
 };
 
 export type PostOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
   title?: Prisma.SortOrder;
   content?: Prisma.SortOrder;
-  authorId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  authorId?: Prisma.SortOrder;
   author?: Prisma.UserOrderByWithRelationInput;
 };
 
@@ -199,11 +196,8 @@ export type PostWhereUniqueInput = Prisma.AtLeast<
     NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[];
     title?: Prisma.StringFilter<'Post'> | string;
     content?: Prisma.StringFilter<'Post'> | string;
-    authorId?: Prisma.StringNullableFilter<'Post'> | string | null;
-    author?: Prisma.XOR<
-      Prisma.UserNullableScalarRelationFilter,
-      Prisma.UserWhereInput
-    > | null;
+    authorId?: Prisma.StringFilter<'Post'> | string;
+    author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
   },
   'id'
 >;
@@ -212,7 +206,7 @@ export type PostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
   title?: Prisma.SortOrder;
   content?: Prisma.SortOrder;
-  authorId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  authorId?: Prisma.SortOrder;
   _count?: Prisma.PostCountOrderByAggregateInput;
   _max?: Prisma.PostMaxOrderByAggregateInput;
   _min?: Prisma.PostMinOrderByAggregateInput;
@@ -229,42 +223,42 @@ export type PostScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<'Post'> | string;
   title?: Prisma.StringWithAggregatesFilter<'Post'> | string;
   content?: Prisma.StringWithAggregatesFilter<'Post'> | string;
-  authorId?: Prisma.StringNullableWithAggregatesFilter<'Post'> | string | null;
+  authorId?: Prisma.StringWithAggregatesFilter<'Post'> | string;
 };
 
 export type PostCreateInput = {
   id?: string;
   title: string;
   content: string;
-  author?: Prisma.UserCreateNestedOneWithoutPostsInput;
+  author: Prisma.UserCreateNestedOneWithoutPostsInput;
 };
 
 export type PostUncheckedCreateInput = {
   id?: string;
   title: string;
   content: string;
-  authorId?: string | null;
+  authorId: string;
 };
 
 export type PostUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   title?: Prisma.StringFieldUpdateOperationsInput | string;
   content?: Prisma.StringFieldUpdateOperationsInput | string;
-  author?: Prisma.UserUpdateOneWithoutPostsNestedInput;
+  author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput;
 };
 
 export type PostUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   title?: Prisma.StringFieldUpdateOperationsInput | string;
   content?: Prisma.StringFieldUpdateOperationsInput | string;
-  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type PostCreateManyInput = {
   id?: string;
   title: string;
   content: string;
-  authorId?: string | null;
+  authorId: string;
 };
 
 export type PostUpdateManyMutationInput = {
@@ -277,17 +271,7 @@ export type PostUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   title?: Prisma.StringFieldUpdateOperationsInput | string;
   content?: Prisma.StringFieldUpdateOperationsInput | string;
-  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-};
-
-export type PostListRelationFilter = {
-  every?: Prisma.PostWhereInput;
-  some?: Prisma.PostWhereInput;
-  none?: Prisma.PostWhereInput;
-};
-
-export type PostOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder;
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type PostCountOrderByAggregateInput = {
@@ -309,6 +293,20 @@ export type PostMinOrderByAggregateInput = {
   title?: Prisma.SortOrder;
   content?: Prisma.SortOrder;
   authorId?: Prisma.SortOrder;
+};
+
+export type PostListRelationFilter = {
+  every?: Prisma.PostWhereInput;
+  some?: Prisma.PostWhereInput;
+  none?: Prisma.PostWhereInput;
+};
+
+export type PostOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder;
+};
+
+export type StringFieldUpdateOperationsInput = {
+  set?: string;
 };
 
 export type PostCreateNestedManyWithoutAuthorInput = {
@@ -397,10 +395,6 @@ export type PostUncheckedUpdateManyWithoutAuthorNestedInput = {
   deleteMany?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[];
 };
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null;
-};
-
 export type PostCreateWithoutAuthorInput = {
   id?: string;
   title: string;
@@ -461,7 +455,7 @@ export type PostScalarWhereInput = {
   id?: Prisma.StringFilter<'Post'> | string;
   title?: Prisma.StringFilter<'Post'> | string;
   content?: Prisma.StringFilter<'Post'> | string;
-  authorId?: Prisma.StringNullableFilter<'Post'> | string | null;
+  authorId?: Prisma.StringFilter<'Post'> | string;
 };
 
 export type PostCreateManyAuthorInput = {
@@ -497,7 +491,7 @@ export type PostSelect<
     title?: boolean;
     content?: boolean;
     authorId?: boolean;
-    author?: boolean | Prisma.Post$authorArgs<ExtArgs>;
+    author?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['post']
 >;
@@ -511,7 +505,7 @@ export type PostSelectCreateManyAndReturn<
     title?: boolean;
     content?: boolean;
     authorId?: boolean;
-    author?: boolean | Prisma.Post$authorArgs<ExtArgs>;
+    author?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['post']
 >;
@@ -525,7 +519,7 @@ export type PostSelectUpdateManyAndReturn<
     title?: boolean;
     content?: boolean;
     authorId?: boolean;
-    author?: boolean | Prisma.Post$authorArgs<ExtArgs>;
+    author?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['post']
 >;
@@ -548,19 +542,19 @@ export type PostInclude<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
-  author?: boolean | Prisma.Post$authorArgs<ExtArgs>;
+  author?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
 export type PostIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
-  author?: boolean | Prisma.Post$authorArgs<ExtArgs>;
+  author?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
 export type PostIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
-  author?: boolean | Prisma.Post$authorArgs<ExtArgs>;
+  author?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
 
 export type $PostPayload<
@@ -569,14 +563,14 @@ export type $PostPayload<
 > = {
   name: 'Post';
   objects: {
-    author: Prisma.$UserPayload<ExtArgs> | null;
+    author: Prisma.$UserPayload<ExtArgs>;
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
       id: string;
       title: string;
       content: string;
-      authorId: string | null;
+      authorId: string;
     },
     ExtArgs['result']['post']
   >;
@@ -1127,16 +1121,17 @@ export interface Prisma__PostClient<
   GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: 'PrismaPromise';
-  author<T extends Prisma.Post$authorArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.Post$authorArgs<ExtArgs>>,
+  author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__UserClient<
-    runtime.Types.Result.GetResult<
-      Prisma.$UserPayload<ExtArgs>,
-      T,
-      'findUniqueOrThrow',
-      GlobalOmitOptions
-    > | null,
-    null,
+    | runtime.Types.Result.GetResult<
+        Prisma.$UserPayload<ExtArgs>,
+        T,
+        'findUniqueOrThrow',
+        GlobalOmitOptions
+      >
+    | Null,
+    Null,
     ExtArgs,
     GlobalOmitOptions
   >;
@@ -1632,28 +1627,6 @@ export type PostDeleteManyArgs<
    * Limit how many Posts to delete.
    */
   limit?: number;
-};
-
-/**
- * Post.author
- */
-export type Post$authorArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs =
-    runtime.Types.Extensions.DefaultArgs,
-> = {
-  /**
-   * Select specific fields to fetch from the User
-   */
-  select?: Prisma.UserSelect<ExtArgs> | null;
-  /**
-   * Omit specific fields from the User
-   */
-  omit?: Prisma.UserOmit<ExtArgs> | null;
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null;
-  where?: Prisma.UserWhereInput;
 };
 
 /**

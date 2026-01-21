@@ -5,12 +5,12 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { Prisma } from 'src/prisma/generated/client.js';
+import { Prisma } from '../../prisma/generated/client.js';
 import { handlePrismaError } from '../utils/prisma-exception.util.js';
 import {
   ErrorResponse,
   HttpResponse,
-} from 'src/shared/types/response.interface.js';
+} from '../../shared/types/response.interface.js';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {

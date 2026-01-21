@@ -6,6 +6,7 @@ import configuration from './config/configuration.js';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor.js';
 import { HttpExceptionFilter } from './common/filters/http-exeption.filter.js';
+import { UserModule } from './module/user/user.module.js';
 
 @Module({
   providers: [
@@ -35,6 +36,7 @@ import { HttpExceptionFilter } from './common/filters/http-exeption.filter.js';
       validate: (env) => envSchema.parse(env),
       load: [configuration],
     }),
+    UserModule,
   ],
 })
 export class AppModule {}

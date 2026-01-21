@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { Prisma } from '../../prisma/generated/client.js';
-import { ErrorResponse } from 'src/shared/types/response.interface.js';
+import { ErrorResponse } from '../../shared/types/response.interface.js';
 
 export function handlePrismaError(
   error: Prisma.PrismaClientKnownRequestError,

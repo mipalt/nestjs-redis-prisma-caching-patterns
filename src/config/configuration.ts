@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { envSchema } from './env.schema.js';
 
 export default () => {

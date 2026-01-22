@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { UserService } from './user.service.js';
+import { User } from '../../prisma/generated/client.js';
 
 @Controller('users')
 export class UserController {
@@ -8,5 +9,10 @@ export class UserController {
   @Get()
   findAll() {
     return this.userService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: User['id']) {
+    return this.userService.findOne(id);
   }
 }

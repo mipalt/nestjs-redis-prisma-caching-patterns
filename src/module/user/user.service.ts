@@ -4,6 +4,7 @@ import { UserResponse } from './interfaces/user.interface.js';
 import { PrismaService } from '../../prisma/prisma.service.js';
 import { userSelect } from './persistence/user.select.js';
 import { success } from '../../common/utils/success.util.js';
+import { User } from '../../prisma/generated/client.js';
 
 @Injectable()
 export class UserService {
@@ -14,5 +15,13 @@ export class UserService {
       select: userSelect,
     });
     return success(users);
+  }
+
+  async findOne(id: User['id']): Promise<ServiceResponse<UserResponse>> {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id },
+      select: userSelect,
+    });
+    return success(user);
   }
 }

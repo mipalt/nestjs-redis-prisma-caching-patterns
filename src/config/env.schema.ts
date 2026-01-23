@@ -2,8 +2,8 @@ import 'dotenv/config';
 import z from 'zod';
 
 export const envSchema = z.object({
-  // database
-  DATABASE_URL: z.string().min(1, 'DATABASE_URL must not be empty'),
+  // database (Prisma contract)
+  DATABASE_URL: z.string().url('DATABASE_URL must be a valid URL'),
 
   // server
   PORT: z.coerce.number().int().positive().default(3000),
@@ -15,10 +15,6 @@ export const envSchema = z.object({
     .default('info'),
 
   // redis
-  REDIS_HOST: z.string().min(1, 'REDIS_HOST must not be empty'),
-  REDIS_PORT: z.coerce
-    .number()
-    .int('REDIS_PORT must be an integer')
-    .positive('REDIS_PORT must be greater than 0')
-    .default(6379),
+  REDIS_HOST: z.string().min(1),
+  REDIS_PORT: z.coerce.number().int().positive().default(6379),
 });

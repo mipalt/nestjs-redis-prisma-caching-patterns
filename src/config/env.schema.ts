@@ -3,7 +3,7 @@ import z from 'zod';
 
 export const envSchema = z.object({
   // database (Prisma contract)
-  DATABASE_URL: z.string().url('DATABASE_URL must be a valid URL'),
+  DATABASE_URL: z.string(),
 
   // server
   PORT: z.coerce.number().int().positive().default(3000),

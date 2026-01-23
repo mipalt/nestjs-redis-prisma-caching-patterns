@@ -1,6 +1,6 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module.js';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { envSchema } from './config/env.schema.js';
 import configuration from './config/configuration.js';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
@@ -10,20 +10,46 @@ import { UserModule } from './module/user/user.module.js';
 import { PostModule } from './module/post/post.module.js';
 import { HttpLoggingInterceptor } from './common/interceptors/http-logging.interceptor.js';
 import { LoggerModule } from './logger/logger.module.js';
+import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
+import KeyvRedis from '@keyv/redis';
 
 @Module({
+  imports: [
+    PrismaModule,
+    UserModule,
+    PostModule,
+    LoggerModule,
+
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+      validate: (env) => envSchema.parse(env),
+      load: [configuration],
+    }),
+
+    CacheModule.registerAsync({
+      isGlobal: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const host = config.get<string>('redis.host', { infer: true });
+        const port = config.get<number>('redis.port', { infer: true });
+        return {
+          store: new KeyvRedis(`redis://${host}:${port}`),
+          ttl: 2 * 60 * 1000, // 2 Minute
+        };
+      },
+    }),
+  ],
+
   providers: [
     {
       provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
+      useClass: HttpLoggingInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: HttpLoggingInterceptor,
+      useClass: ResponseInterceptor,
     },
     {
       provide: APP_PIPE,
@@ -34,18 +60,10 @@ import { LoggerModule } from './logger/logger.module.js';
         transformOptions: { enableImplicitConversion: true },
       }),
     },
-  ],
-  imports: [
-    PrismaModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-      validate: (env) => envSchema.parse(env),
-      load: [configuration],
-    }),
-    UserModule,
-    PostModule,
-    LoggerModule,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule {}

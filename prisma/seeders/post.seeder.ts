@@ -15,7 +15,7 @@ export async function postSeeder(prisma: PrismaClient) {
     }
 
     const posts = users.flatMap((user) =>
-      Array.from({ length: 50 }, (_, idx) => {
+      Array.from({ length: 2000 }, (_, idx) => {
         const postIndex = idx + 1;
 
         return {

@@ -12,6 +12,7 @@ import { HttpLoggingInterceptor } from './common/interceptors/http-logging.inter
 import { LoggerModule } from './logger/logger.module.js';
 import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
 import KeyvRedis from '@keyv/redis';
+import { Time } from './common/utils/time.util.js';
 
 @Module({
   imports: [
@@ -36,21 +37,13 @@ import KeyvRedis from '@keyv/redis';
         const port = config.get<number>('redis.port', { infer: true });
         return {
           store: new KeyvRedis(`redis://${host}:${port}`),
-          ttl: 2 * 60 * 1000, // 2 Minute
+          ttl: Time.minute(1),
         };
       },
     }),
   ],
 
   providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: HttpLoggingInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor,
-    },
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
@@ -59,6 +52,14 @@ import KeyvRedis from '@keyv/redis';
         transform: true,
         transformOptions: { enableImplicitConversion: true },
       }),
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpLoggingInterceptor,
     },
     {
       provide: APP_FILTER,

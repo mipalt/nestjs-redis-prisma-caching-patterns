@@ -18,17 +18,21 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<HttpResponse>();
 
-    const errorResponse: ErrorResponse = {
+    let errorResponse: ErrorResponse = {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       message: 'Internal server error',
     };
 
-    if (exception instanceof Prisma.PrismaClientKnownRequestError) {
-      const prismaError = handlePrismaError(exception);
+    if (exception && typeof exception === 'object' && 'code' in exception) {
+      const prismaError = handlePrismaError(
+        exception as Prisma.PrismaClientKnownRequestError,
+      );
 
-      errorResponse.statusCode = HttpStatus.BAD_REQUEST;
-      errorResponse.message = prismaError.message;
-      errorResponse.errors = prismaError.errors;
+      errorResponse = {
+        statusCode: prismaError.statusCode,
+        message: prismaError.message,
+        errors: prismaError.errors,
+      };
     } else if (exception instanceof HttpException) {
       const res = exception.getResponse() as any;
 
@@ -41,13 +45,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
         res.message.forEach((msg: string) => {
           const field = msg.split(' ')[0].toLowerCase();
-
           const errors = errorResponse.errors as Record<string, string[]>;
 
-          if (!errors[field]) {
-            errors[field] = [];
-          }
-
+          errors[field] ??= [];
           errors[field].push(msg);
         });
       }

@@ -10,9 +10,8 @@ import { UserModule } from './module/user/user.module.js';
 import { PostModule } from './module/post/post.module.js';
 import { HttpLoggingInterceptor } from './common/interceptors/http-logging.interceptor.js';
 import { LoggerModule } from './logger/logger.module.js';
-import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
+import { CacheModule } from '@nestjs/cache-manager';
 import KeyvRedis from '@keyv/redis';
-import { Time } from './common/utils/time.util.js';
 
 @Module({
   imports: [
@@ -37,7 +36,7 @@ import { Time } from './common/utils/time.util.js';
         const port = config.get<number>('redis.port', { infer: true });
         return {
           store: new KeyvRedis(`redis://${host}:${port}`),
-          ttl: Time.minute(1),
+          ttl: 2 * 60 * 1000,
         };
       },
     }),

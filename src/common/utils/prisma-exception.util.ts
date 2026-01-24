@@ -62,6 +62,11 @@ export function handlePrismaError(
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: 'Query failed',
       };
+    case 'P2021':
+      return {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Database table not found. Please run migrations.`,
+      };
     default:
       return {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,

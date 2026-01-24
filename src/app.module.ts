@@ -12,6 +12,7 @@ import { HttpLoggingInterceptor } from './common/interceptors/http-logging.inter
 import { LoggerModule } from './logger/logger.module.js';
 import { CacheModule } from '@nestjs/cache-manager';
 import KeyvRedis from '@keyv/redis';
+import { Ttl } from './common/utils/ttl.util.js';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import KeyvRedis from '@keyv/redis';
         const port = config.get<number>('redis.port', { infer: true });
         return {
           store: new KeyvRedis(`redis://${host}:${port}`),
-          ttl: 2 * 60 * 1000,
+          ttl: Ttl.minutes(2),
         };
       },
     }),

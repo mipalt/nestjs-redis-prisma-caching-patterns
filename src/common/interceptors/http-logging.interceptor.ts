@@ -13,33 +13,14 @@ export class HttpLoggingInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest();
-    const res = context.switchToHttp().getResponse();
     const start = Date.now();
 
     return next.handle().pipe(
-      tap({
-        next: () => {
-          const duration = Date.now() - start;
-          const message = `${req.method} ${req.originalUrl} ${res.statusCode} ~ ${duration}ms`;
-
-          if (res.statusCode >= 400) {
-            this.logger.error(message, {
-              ip: req.ip,
-              statusMessage: res.statusMessage,
-            });
-          } else {
-            this.logger.info(message);
-          }
-        },
-        error: (err) => {
-          const duration = Date.now() - start;
-          const message = `${req.method} ${req.originalUrl} 500 ~ ${duration}ms`;
-
-          this.logger.error(message, {
-            ip: req.ip,
-            error: err.message,
-          });
-        },
+      tap(() => {
+        const res = context.switchToHttp().getResponse();
+        const duration = Date.now() - start;
+        const message = `${req.method} ${req.originalUrl} ${res.statusCode} ~ ${duration}ms`;
+        this.logger.info(message);
       }),
     );
   }

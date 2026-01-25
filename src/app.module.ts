@@ -36,7 +36,7 @@ import { Ttl } from './common/utils/ttl.util.js';
         const host = config.get<string>('redis.host', { infer: true });
         const port = config.get<number>('redis.port', { infer: true });
         return {
-          store: new KeyvRedis(`redis://${host}:${port}`),
+          stores: [new KeyvRedis(`redis://${host}:${port}`)],
           ttl: Ttl.minutes(2),
         };
       },

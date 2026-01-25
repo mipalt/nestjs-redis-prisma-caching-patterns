@@ -1,98 +1,182 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS Redis Prisma Caching Patterns
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Project Description
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This repository provides **best-practice examples for integrating NestJS, Redis, and Prisma**, with a strong focus on **caching strategies across different application layers**.
 
-## Description
+The project is designed to help developers understand:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+* How to integrate Redis caching into NestJS correctly
+* The difference between **controller-level caching** and **service-level caching**
+* How to treat cache as an *optional dependency* (non-blocking)
+* Architectural patterns commonly used in production systems
 
-## Project setup
+The examples are implemented through **two intentionally different modules** (`User` and `Post`) to demonstrate real-world caching use cases.
 
-```bash
-$ pnpm install
+---
+
+## Technologies Used
+
+* **NestJS** – Backend framework
+* **Prisma ORM** – Database access layer
+* **Redis** – Cache store
+* **Keyv** – Cache abstraction layer
+* **Docker & Docker Compose** – Environment consistency
+* **pnpm** – Package manager
+
+---
+
+## Related Packages
+
+Key packages related to caching and data access:
+
+```json
+"@keyv/redis": "^5.1.6",
+"@nestjs/cache-manager": "^3.1.0",
+"@prisma/client": "^7.2.0",
+"@nestjs/cli": "^11.0.0"
 ```
 
-## Compile and run the project
+---
+
+## Project Setup
+
+### Prerequisites
+
+* Docker & Docker Compose
+* Node.js (LTS)
+* pnpm
+
+Copy the environment file:
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+cp .env.example .env
 ```
 
-## Run tests
+Fill in database credentials, Redis configuration, and other required environment variables.
+
+---
+
+### Option 1 — Run with Docker (Recommended)
+
+Docker is the **source of truth** for this project environment.
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+docker compose up --build
 ```
 
-## Deployment
+Benefits:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+* Consistent environment
+* No local dependency conflicts
+* Closely matches production setup
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+---
+
+### Option 2 — Run Locally with pnpm (Optional)
+
+Provided for development convenience and debugging.
+
+> Note: Database and Redis **must still be run via Docker**.
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+pnpm install
+pnpm start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## User vs Post Module — Architectural Differences
 
-Check out a few resources that may come in handy when working with NestJS:
+These two modules are intentionally designed to demonstrate **two different caching approaches** commonly used in NestJS applications.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+### User Module — Controller-Level Caching
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Caching is applied at the **HTTP layer** using NestJS built-in decorators and interceptors.
 
-## Stay in touch
+Characteristics:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+* Uses `CacheInterceptor`
+* Cache key and TTL are declared in the controller
+* Suitable for demonstrating request–response caching mechanics
+
+Example:
+
+```ts
+@Get()
+@UseInterceptors(CacheInterceptor)
+@CacheKey('users:all')
+@CacheTTL(Ttl.minutes(5))
+findAll() {
+  return this.userService.findAll();
+}
+```
+
+For parameter-based caching, a **custom interceptor** (`UserCacheInterceptor`) is used to generate dynamic cache keys, keeping decorators clean and consistent.
+
+Purpose of this module:
+
+* Educational demonstration
+* Documentation of NestJS built-in caching features
+* HTTP-layer caching example
+
+---
+
+### Post Module — Service-Level Caching
+
+Caching is implemented directly in the **service layer** as part of business logic optimization.
+
+Characteristics:
+
+* Uses `cacheManager` manually
+* Cache is treated as a *best-effort optimization*
+* Cache failures never block the main request flow
+
+Example:
+
+```ts
+const cached = await this.safeCacheGet<PostResponse[]>(cacheKey);
+if (cached) return success(cached);
+```
+
+Cache read/write operations are encapsulated in internal helpers (`safeCacheGet`, `safeCacheSet`) to:
+
+* Eliminate repetitive `try–catch` blocks
+* Centralize cache error handling
+* Keep service methods focused on business logic
+
+Purpose of this module:
+
+* Real-world production pattern
+* Cache reuse beyond HTTP layer
+* Scalable and maintainable architecture
+
+---
+
+## Architectural Principles
+
+* Cache is an **optional dependency**
+* Database is a **mandatory dependency**
+* Cache failures must not break API responses
+* Business and data errors propagate to the global exception filter
+* Cache TTL is chosen based on data characteristics
+
+---
+
+## Repository Goal
+
+This repository is **not a production-ready template**, but:
+
+* An architectural reference
+* A learning resource
+* A demonstration of industry-standard patterns
+
+Developers are encouraged to understand **why** each decision is made, not just how it is implemented.
+
+---
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+MIT

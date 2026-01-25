@@ -3,7 +3,7 @@ import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import { UserService } from './user.service.js';
 import { User } from '../../prisma/generated/client.js';
 import { Ttl } from '../../common/utils/ttl.util.js';
-import { UserCacheInterceptor } from './interptors/user-cache-key.interceptor.js';
+import { UserCacheInterceptor } from './interceptors/user-cache-key.interceptor.js';
 
 /**
  * UserController
